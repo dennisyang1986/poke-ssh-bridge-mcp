@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "poke-mcp-ssh-bridge"
+version = "0.1.0"
+description = "MCP server that exposes SSH execution tools for Poke."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.27.0",
+    "paramiko>=4.0.0",
+    "uvicorn>=0.44.0",
+]
+
+[project.scripts]
+poke-mcp-ssh-bridge = "poke_mcp_ssh_bridge.server:main"
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]
