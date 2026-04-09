@@ -1,0 +1,7 @@
+.env
+.cloudflared/
+.packages/
+.venv/
+.runtime/
+__pycache__/
+*.pyc
