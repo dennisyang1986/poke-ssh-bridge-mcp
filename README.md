@@ -8,6 +8,8 @@ Poke SSH Bridge MCP enables AI agents to securely execute commands and retrieve 
 - `ssh_execute`: run shell commands on a remote SSH server
 - `get_server_info`: retrieve basic system information from the remote server
 
+![Poke SSH Bridge Architecture](https://pbs.twimg.com/media/HFdyKyYboAAPgYR?format=jpg&name=large)
+
 ## Why it's powerful for AI agents
 
 - Seamless integration: AI agents can interact with remote servers using natural language through standardized MCP tools
@@ -69,6 +71,10 @@ A simple shell wrapper is also included:
 ```bash
 ./scripts/start.sh
 ```
+
+## Network Configuration
+
+If the MCP server runs inside a private network, expose it to the public internet before Poke can access it. Tools such as frp or Cloudflare Tunnel can be used to publish the server safely without opening direct inbound access to the private network.
 
 ## Security guidance
 
