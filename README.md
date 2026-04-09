@@ -11,7 +11,7 @@ Poke SSH Bridge MCP enables AI agents to securely execute commands and retrieve 
 
 ![Poke SSH Bridge Architecture](https://pbs.twimg.com/media/HFdyKyYboAAPgYR?format=jpg&name=large)
 
-## Why it's powerful for AI agents
+## Why it is powerful for AI agents
 
 - Seamless integration: AI agents can interact with remote servers using natural language through standardized MCP tools
 - Secure access: built-in authentication with a shared Poke secret header
