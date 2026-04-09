@@ -45,6 +45,8 @@ POKE_SSH_CONNECT_TIMEOUT=10
 POKE_SSH_COMMAND_TIMEOUT=30
 ```
 
+When adding this MCP server in Poke at poke.com/integrations/new, make sure the server URL includes the `/mcp` suffix. For example: `https://your-domain.com/mcp`.
+
 The `ssh_execute` tool accepts these runtime parameters when you call it:
 - `host`
 - `username`
