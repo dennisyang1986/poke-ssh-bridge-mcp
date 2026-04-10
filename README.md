@@ -40,7 +40,7 @@ Create a `.env` file in the project root:
 ```env
 POKE_API_KEY=your-shared-secret-here
 POKE_MCP_HOST=0.0.0.0
-POKE_MCP_PORT=8000
+POKE_MCP_PORT=8888
 POKE_SSH_CONNECT_TIMEOUT=10
 POKE_SSH_COMMAND_TIMEOUT=30
 ```
