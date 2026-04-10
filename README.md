@@ -4,14 +4,9 @@ A Python MCP (Model Context Protocol) server that bridges Poke/AI agents to secu
 
 ## What is this?
 
-This deployment exposes only two MCP tools:
+This deployment exposes two MCP tools:
 - `ssh_execute`: run shell commands on a remote SSH host
 - `get_server_info`: retrieve basic information about the MCP server
-
-## Requirements
-
-- Python 3.10+ is required because fastmcp depends on it.
-- `pip`
 
 ## Why it is useful
 
@@ -19,6 +14,11 @@ This deployment exposes only two MCP tools:
 - Authentication through a shared Poke secret header
 - Password-based SSH and SSH key-based SSH support
 - Simple deployment behind a tunnel or reverse proxy
+
+## Requirements
+
+- Python 3.10+ is required because fastmcp depends on it.
+- `pip`
 
 ## Setup
 
@@ -42,33 +42,50 @@ POKE_SSH_CONNECT_TIMEOUT=10
 POKE_SSH_COMMAND_TIMEOUT=30
 ```
 
-The server listens on port 8888 by default. When adding this MCP server in Poke, use a URL like `https://your-domain.com/mcp`.
+Poke must be able to reach this bridge over the public internet, so port 8888 MUST be exposed externally. Binding only to localhost is not enough.
 
-## Running the server
+If this machine is behind NAT or a home router, expose port 8888 with a tunnel or forwarding layer such as frp or cloudflared.
 
-```bash
-python main.py
-```
+## Usage
 
-Or use the console script after installing the project:
-
-```bash
-poke-ssh-bridge-mcp
-```
-
-A simple shell wrapper is also included:
+Start the server from the repository root with the shell wrapper:
 
 ```bash
 ./scripts/start.sh
 ```
 
+Or run the module directly:
+
+```bash
+PYTHONPATH=src python3 -m server
+```
+
+If you install the package, the console script also works:
+
+```bash
+poke-mcp-ssh-bridge
+```
+
+The server listens on port 8888 by default. Make sure your public endpoint forwards to that same port on the machine running the bridge.
+
+## Running it reliably
+
+For long-lived use, run the bridge under a process manager such as pm2 so it restarts automatically if it crashes or the machine reboots.
+
+Example:
+
+```bash
+pm2 start ./scripts/start.sh --name poke-ssh-bridge-mcp --interpreter bash
+pm2 save
+pm2 startup
+```
+
 ## Security guidance
 
-- Protect your Poke API key: never share or commit it
-- Never commit `.env` files
-- Never commit SSH private keys to the repository
-- Keep the MCP server private and expose it only through a tunnel or proxy
-- Restrict SSH users to the minimum permissions needed for your workflow
+- Keep `POKE_API_KEY` secret and rotate it if it is ever exposed
+- Never commit `.env` files, SSH private keys, or other credentials
+- Restrict the SSH account to the minimum permissions needed for your workflow
+- Prefer key-based SSH auth where possible
 
 ## License
 
