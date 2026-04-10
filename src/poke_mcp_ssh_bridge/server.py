@@ -128,7 +128,7 @@ def get_server_info(headers: dict[str, str] = CurrentHeaders()) -> dict:
 
 
 def main() -> None:
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("POKE_MCP_PORT", os.environ.get("PORT", 8888)))
     host = os.environ.get("POKE_MCP_HOST", "0.0.0.0")
 
     print(f"Starting FastMCP server on {host}:{port}")

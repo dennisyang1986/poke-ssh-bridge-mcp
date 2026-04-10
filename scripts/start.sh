@@ -11,7 +11,8 @@ if [[ -f .env ]]; then
 fi
 
 export PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}"
-export PORT="${POKE_MCP_PORT:-8000}"
+export POKE_MCP_PORT="${POKE_MCP_PORT:-8888}"
+export PORT="${PORT:-$POKE_MCP_PORT}"
 export ENVIRONMENT="${ENVIRONMENT:-production}"
 
 exec python3 -m poke_mcp_ssh_bridge.server
