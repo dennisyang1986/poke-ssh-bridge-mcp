@@ -10,9 +10,9 @@ if [[ -f .env ]]; then
   set +a
 fi
 
-export PYTHONPATH="$(pwd)/src:$(pwd)/.packages${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH="/root/poke-mcp-ssh-bridge/src:/root/poke-mcp-ssh-bridge/.packages${PYTHONPATH:+:$PYTHONPATH}"
 export POKE_MCP_PORT="${POKE_MCP_PORT:-8888}"
 export PORT="${PORT:-$POKE_MCP_PORT}"
 export ENVIRONMENT="${ENVIRONMENT:-production}"
 
-exec python3 -m poke_mcp_ssh_bridge.server
+exec python3 -m server

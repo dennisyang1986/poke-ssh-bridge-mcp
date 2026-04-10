@@ -10,8 +10,7 @@ module.exports = {
       max_restarts: 10,
       env: {
         PYTHONUNBUFFERED: '1',
-        PORT: '8888',
-        POKE_MCP_PORT: '8888'
+        PYTHONPATH: '/root/poke-mcp-ssh-bridge/src:/root/poke-mcp-ssh-bridge/.packages'
       }
     },
     {
@@ -23,9 +22,7 @@ module.exports = {
       watch: false,
       max_restarts: 10,
       env: {
-        PYTHONUNBUFFERED: '1',
-        PORT: '8888',
-        POKE_MCP_PORT: '8888'
+        PYTHONUNBUFFERED: '1'
       }
     }
   ]

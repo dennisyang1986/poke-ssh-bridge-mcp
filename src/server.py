@@ -10,7 +10,7 @@ from fastmcp.exceptions import AuthorizationError
 from fastmcp.server.dependencies import CurrentHeaders, get_http_request
 from fastmcp.server.middleware import Middleware
 
-from .ssh_bridge import execute_command
+from sshbridge import execute_command
 
 SERVER_NAME = os.environ.get("POKE_MCP_NAME", "Poke MCP SSH Bridge").strip() or "Poke MCP SSH Bridge"
 POKE_API_KEY = os.environ.get("POKE_API_KEY", "")
