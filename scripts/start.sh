@@ -10,7 +10,7 @@ if [[ -f .env ]]; then
   set +a
 fi
 
-export PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH="$(pwd):$(pwd)/.packages${PYTHONPATH:+:$PYTHONPATH}"
 export POKE_MCP_PORT="${POKE_MCP_PORT:-8888}"
 export PORT="${PORT:-$POKE_MCP_PORT}"
 export ENVIRONMENT="${ENVIRONMENT:-production}"
