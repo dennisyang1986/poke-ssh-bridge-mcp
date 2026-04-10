@@ -2,21 +2,20 @@
 
 A Python MCP (Model Context Protocol) server that bridges Poke/AI agents to secure SSH access on remote Linux machines.
 
-## What is this?
+## What this server exposes
 
-Poke SSH Bridge MCP enables AI agents to securely execute commands and retrieve system information from remote Linux servers over SSH. It provides three core tools:
-- `ssh_execute`: run shell commands on a remote SSH server
-- `get_file_contents`: read a remote file and return its contents as raw text or base64
-- `get_server_info`: retrieve basic system information from the remote server
+This deployment exposes only two MCP tools:
+- `ssh_execute`: run shell commands on a remote SSH host
+- `get_server_info`: retrieve basic information about the MCP server
 
-![Poke SSH Bridge Architecture](https://pbs.twimg.com/media/HFdyKyYboAAPgYR?format=jpg&name=large)
+There is no file server, image relay, or base64 image handling endpoint in this deployment.
 
-## Why it is powerful for AI agents
+## Why it is useful
 
-- Seamless integration: AI agents can interact with remote servers using natural language through standardized MCP tools
-- Secure access: built-in authentication with a shared Poke secret header
-- Flexible authentication: supports password-based auth and SSH private keys, either inline or via file path
-- Designed for production: ready to run behind secure tunnels like Cloudflare Tunnel
+- Standardized MCP interface for remote server administration
+- Authentication through a shared Poke secret header
+- Password-based SSH and SSH key-based SSH support
+- Simple deployment behind PM2 and a tunnel or reverse proxy
 
 ## Setup
 
@@ -28,7 +27,7 @@ Poke SSH Bridge MCP enables AI agents to securely execute commands and retrieve 
 ### Installation
 
 ```bash
-git clone https://github.com/dennisyang1986/poke-ssh-bridge-mcp.git
+git clone https://your-domain.com/dennisyang1986/poke-ssh-bridge-mcp.git
 cd poke-ssh-bridge-mcp
 pip install -r requirements.txt
 ```
@@ -45,33 +44,78 @@ POKE_SSH_CONNECT_TIMEOUT=10
 POKE_SSH_COMMAND_TIMEOUT=30
 ```
 
-When adding this MCP server in Poke at poke.com/integrations/new, make sure the server URL includes the `/mcp` suffix. For example: `https://your-domain.com/mcp`.
+The server listens on port 8888 by default. If you deploy it behind a tunnel or proxy, keep the local service on `127.0.0.1:8888` or `0.0.0.0:8888` and expose it externally through the tunnel.
 
-The `ssh_execute` tool accepts these runtime parameters when you call it:
-- `host`
-- `username`
-- `command`
-- `port` optional, defaults to 22
-- `password` optional
-- `private_key` optional
-- `private_key_path` optional
-- `passphrase` optional
+## PM2 deployment
 
-The `get_file_contents` tool accepts these runtime parameters when you call it:
-- `host`
-- `username`
-- `remote_path`
-- `port` optional, defaults to 22
-- `password` optional
-- `private_key` optional
-- `private_key_path` optional
-- `passphrase` optional
-- `encoding` optional, either `base64` or `raw`, defaults to `base64`
+`ecosystem.config.cjs` is the PM2 process management file for this deployment. Use it to keep the MCP server and the optional tunnel process running, and to restart them automatically if they crash.
+
+Example:
+
+```bash
+pm2 start ecosystem.config.cjs
+pm2 save
+```
+
+## Exposing port 8888 publicly
+
+The MCP server should stay private on the machine itself and be published through a tunnel or reverse proxy.
+
+### Using frp
+
+If you already have frp in your current setup, map the local service on port 8888 to the public side.
+
+TCP or remote port mapping example:
+
+```ini
+[common]
+server_addr = your-domain.com
+server_port = 7000
+
+auto_retry_interval = 3
+
+[poke_mcp_http]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 8888
+remote_port = 8888
+```
+
+If you prefer vhost/HTTP-style routing, point the public hostname at the tunnel and forward requests to the local MCP server:
+
+```ini
+[poke_mcp_http]
+type = http
+local_ip = 127.0.0.1
+local_port = 8888
+custom_domains = your-domain.com
+```
+
+In either case, make sure the public URL routes to the MCP endpoint path, for example `https://your-domain.com/mcp`.
+
+### Using cloudflared
+
+You can also expose the local service with Cloudflare Tunnel:
+
+```bash
+cloudflared tunnel --url http://127.0.0.1:8888
+```
+
+Or with an ingress rule:
+
+```yaml
+ingress:
+  - hostname: your-domain.com
+    service: http://127.0.0.1:8888
+  - service: http_status:404
+```
+
+Then publish the MCP endpoint at `https://your-domain.com/mcp`.
 
 ## Running the server
 
 ```bash
-python3 -m poke_mcp_ssh_bridge.server
+python main.py
 ```
 
 Or use the console script after installing the project:
@@ -86,16 +130,27 @@ A simple shell wrapper is also included:
 ./scripts/start.sh
 ```
 
-## Network Configuration
+## `ssh_execute` parameters
 
-If the MCP server runs inside a private network, expose it to the public internet before Poke can access it. Tools such as frp or Cloudflare Tunnel can be used to publish the server safely without opening direct inbound access to the private network.
+- `host`
+- `username`
+- `command`
+- `port` optional, defaults to 22
+- `password` optional
+- `private_key` optional
+- `private_key_path` optional
+- `passphrase` optional
+
+## `get_server_info` parameters
+
+This tool takes no extra parameters.
 
 ## Security guidance
 
 - Protect your Poke API key: never share or commit it
 - Never commit `.env` files
 - Never commit SSH private keys to the repository
-- Use secure tunnels such as Cloudflare Tunnel when exposing the service remotely
+- Keep the MCP server private and expose it only through a tunnel or proxy
 - Restrict SSH users to the minimum permissions needed for your workflow
 
 ## License
