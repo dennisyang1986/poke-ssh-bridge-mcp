@@ -9,7 +9,9 @@ module.exports = {
       watch: false,
       max_restarts: 10,
       env: {
-        PYTHONUNBUFFERED: '1'
+        PYTHONUNBUFFERED: '1',
+        PORT: '8888',
+        POKE_MCP_PORT: '8888'
       }
     },
     {
@@ -21,7 +23,9 @@ module.exports = {
       watch: false,
       max_restarts: 10,
       env: {
-        PYTHONUNBUFFERED: '1'
+        PYTHONUNBUFFERED: '1',
+        PORT: '8888',
+        POKE_MCP_PORT: '8888'
       }
     }
   ]

@@ -18,7 +18,7 @@ dependencies = [
 poke-mcp-ssh-bridge = "poke_mcp_ssh_bridge.server:main"
 
 [tool.setuptools.package-dir]
-"" = "."
+"" = "src"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
