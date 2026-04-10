@@ -43,6 +43,7 @@ POKE_SSH_COMMAND_TIMEOUT=30
 ```
 
 Poke must be able to reach this bridge over the public internet, so port 8888 MUST be exposed externally. Binding only to localhost is not enough.
+Poke must be able to reach this bridge over the public internet, so port 8888 MUST be exposed externally. Binding only to localhost is not enough.
 
 If this machine is behind NAT or a home router, expose port 8888 with a tunnel or forwarding layer such as frp or cloudflared.
 
@@ -67,15 +68,6 @@ poke-mcp-ssh-bridge
 ```
 
 The server listens on port 8888 by default. Make sure your public endpoint forwards to that same port on the machine running the bridge.
-
-## Running it reliably
-
-For long-lived use, run the bridge under a process manager such as pm2 so it restarts automatically if it crashes or the machine reboots.
-
-Example:
-
-```bash
-pm2 start ./scripts/start.sh --name poke-ssh-bridge-mcp --interpreter bash
 pm2 save
 pm2 startup
 ```
