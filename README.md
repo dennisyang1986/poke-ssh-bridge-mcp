@@ -48,12 +48,12 @@ The server listens on port 8888 by default. If you deploy it behind a tunnel or 
 
 ## PM2 deployment
 
-`ecosystem.config.cjs` is the PM2 process management file for this deployment. Use it to keep the MCP server and the optional tunnel process running, and to restart them automatically if they crash.
+Use PM2 to keep the MCP server running and to restart it automatically if it crashes.
 
 Example:
 
 ```bash
-pm2 start ecosystem.config.cjs
+pm2 start ./scripts/start.sh --name poke-mcp-ssh-bridge
 pm2 save
 ```
 
